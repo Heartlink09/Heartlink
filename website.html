@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heart Link</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #a18cd1;
+      --secondary: #fbc2eb;
+      --deep-purple: #6a1b9a;
+      --danger: #e53935;
+      --light-purple: #f6e9ff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background: var(--deep-purple);
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: white;
+      color: var(--deep-purple);
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav button:hover {
+      background: var(--light-purple);
+    }
+
+    .page {
+      display: none;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .container {
+      background: #ffffffdd;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 1rem;
+      font-size: 1rem;
+    }
+
+    button.submit {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: var(--deep-purple);
+      color: white;
+      border: none;
+      border-radius: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      padding: 0.7rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn.follow {
+      background-color: var(--deep-purple);
+      color: white;
+      border: none;
+    }
+
+    .btn.block {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+    }
+
+    .profile-pic {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--deep-purple);
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    @media (max-width: 500px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <button onclick="showPage('login')">Login</button>
+    <button onclick="showPage('register')">Register</button>
+    <button onclick="showPage('profile')">Profile</button>
+    <button onclick="showPage('messages')">Messages</button>
+    <button onclick="showPage('online')">Online Users</button>
+    <button onclick="showPage('post')">Share Post</button>
+    <button onclick="showPage('special')">Special One</button>
+    <button onclick="logout()">Logout</button>
+  </nav>
+
+  <!-- Login Page -->
+  <div id="login" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Login</h2>
+      <form onsubmit="handleLogin(event)">
+        <input type="text" placeholder="Nickname" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit" class="submit">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Page -->
+  <div id="register" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Sign Up</h2>
+      <form onsubmit="handleRegister(event)">
+        <input type="text" placeholder="Nickname" required />
+        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Confirm Password" required />
+        <button type="submit" class="submit">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profile Page -->
+  <div id="profile" class="page">
+    <div class="container">
+      <div class="header">
+        <img id="preview" class="profile-pic" src="https://via.placeholder.com/140" alt="Profile Picture">
+        <input type="file" accept="image/*" onchange="loadProfilePic(event)" />
+        <h2 style="color: var(--deep-purple)">My Profile</h2>
+      </div>
+      <form>
+        <input type="text" placeholder="City" required />
+        <input type="number" placeholder="Age" min="18" required />
+        <select required>
+          <option value="">-- Select Gender --</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="nonbinary">Non-binary</option>
+        </select>
+        <textarea placeholder="Say something about yourself..."></textarea>
+        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+          <button type="button" class="btn follow" onclick="followUser()">Follow</button>
+          <button type="button" class="btn block" onclick="blockUser()">Block</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Messages Page -->
+  <div id="messages" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Messages</h2>
+      <textarea placeholder="Write a message..."></textarea>
+      <button class="submit">Send</button>
+    </div>
+  </div>
+
+  <!-- Online Users Page -->
+  <div id="online" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Online Users</h2>
+      <ul>
+        <li>Alice</li>
+        <li>Bob</li>
+        <li>Charlie</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Post Sharing Page -->
+  <div id="post" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Share a Post</h2>
+      <input type="text" placeholder="Post Title" />
+      <textarea placeholder="Write something..."></textarea>
+      <input type="file" accept="image/*" />
+      <button class="submit">Post</button>
+    </div>
+  </div>
+
+  <!-- Special One (Private Chat) Page -->
+  <div id="special" class="page">
+    <div class="container">
+      <h2 style="text-align:center; color: var(--deep-purple)">Special One ❤️</h2>
+      <textarea placeholder="Send a private message..."></textarea>
+      <button class="submit">Send Privately</button>
+    </div>
+  </div>
+
+  <script>
+    // On page load
+    window.onload = function () {
+      if (!localStorage.getItem("loggedIn")) {
+        showPage("login");
+      } else {
+        showPage("profile");
+      }
+    };
+
+    function showPage(pageId) {
+      if (!localStorage.getItem("loggedIn") && pageId !== "login" && pageId !== "register") {
+        alert("Please login or register to continue.");
+        pageId = "login";
+      }
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      localStorage.setItem("loggedIn", "true");
+      showPage("profile");
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      localStorage.setItem("loggedIn", "true");
+      showPage("profile");
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      showPage("login");
+    }
+
+    function loadProfilePic(event) {
+      const preview = document.getElementById('preview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+    }
+
+    function followUser() {
+      alert("You are now following this user!");
+    }
+
+    function blockUser() {
+      const confirmed = confirm("Are you sure you want to block this user?");
+      if (confirmed) {
+        alert("User has been blocked.");
+      }
+    }
+  </script>
+</body>
+</html>
